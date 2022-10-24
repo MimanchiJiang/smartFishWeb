@@ -84,7 +84,7 @@ export default {
                 login.value.notice = "密码长度为6~16个字符";
                 return;
             }
-            router.push({ path: 'doc/intro' })
+            router.push({ path: 'doc/equipment' })
 
         }
         const close = () => {
@@ -174,7 +174,7 @@ export default {
 
             input {
                 display: block;
-                width: 100%;
+                width: 92%;
                 height: 35px;
                 line-height: 35px;
                 padding: 0 6px;

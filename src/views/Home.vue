@@ -47,7 +47,6 @@
 </template>
 <script lang="ts">
 import Topnav from "../components/topnav.vue"
-import Dialog from '../lib/Dialog.vue'
 import Login from './Login.vue'
 
 
@@ -69,7 +68,7 @@ export default {
             f2
         }
     },
-    components: { Topnav, Dialog, Login }
+    components: { Topnav, Login }
 }
 </script>
 <style lang="scss" scoped>
