@@ -67,6 +67,7 @@ export default {
     >main {
         flex-grow: 1;
         padding: 16px 100px 16px 200px;
+        background-color: rgb(242, 242, 244);
 
         @media (max-width: 800px) {
             padding: 16px 20px;
@@ -81,7 +82,8 @@ aside {
     /* firefox */
     -ms-overflow-style: none;
     /* IE 10+ */
-    background: rgba(194, 194, 194, 0.5);
+    border-right: #000;
+    background-color: rgb(156, 156, 156);
     width: 300px;
     padding: 100px 0;
     position: fixed;

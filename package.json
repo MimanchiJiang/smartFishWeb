@@ -9,6 +9,7 @@
   },
   "dependencies": {
     "echarts": "^5.4.0",
+    "element-plus": "^2.2.19",
     "github-markdown-css": "^5.1.0",
     "prismjs": "^1.29.0",
     "vue": "^3.0.0-rc.1",

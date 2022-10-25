@@ -48,9 +48,9 @@
 <script lang="ts">
 import Topnav from "../components/topnav.vue"
 import Login from './Login.vue'
-
-
 import { ref } from 'vue'
+import Dialog from '../lib/Dialog.vue'
+
 export default {
     setup() {
         const x = ref(false)
@@ -68,7 +68,7 @@ export default {
             f2
         }
     },
-    components: { Topnav, Login }
+    components: { Topnav, Login, Dialog }
 }
 </script>
 <style lang="scss" scoped>
