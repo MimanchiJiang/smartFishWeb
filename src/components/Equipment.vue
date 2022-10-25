@@ -312,9 +312,6 @@ export default {
                         margin-right: 20px;
                         text-align: center;
                     }
-
-
-
                 }
 
                 &-pump {

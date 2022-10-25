@@ -12,6 +12,10 @@
                             <router-link to=/doc/equipment>设备展示
                             </router-link>
                         </li>
+                        <li>
+                            <router-link to=/doc/history>历史记录
+                            </router-link>
+                        </li>
                     </ol>
                 </aside>
             </div>

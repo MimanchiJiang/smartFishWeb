@@ -3,6 +3,7 @@ import Home from './views/Home.vue'
 import Doc from './views/Doc.vue'
 import Login from "./views/Login.vue"
 import Equipment from './components/Equipment.vue'
+import HistoryData from './components/HistoryData.vue'
 const history = createWebHashHistory()
 export const router = createRouter({
     history: history,
@@ -11,7 +12,8 @@ export const router = createRouter({
         {
             path: '/doc', component: Doc, children: [
                 { path: '', redirect: '/doc/equipment' },
-                { path: 'equipment', component: Equipment }
+                { path: 'equipment', component: Equipment },
+                { path: 'history', component: HistoryData }
 
             ]
         },
