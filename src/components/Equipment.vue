@@ -54,8 +54,11 @@
                         </div>
                     </div>
                     <div class="equipment-control-content-servo">
-                        <span>舵机开关</span>
-
+                        <div>
+                            <span>舵机开关</span>
+                            <el-input-number v-model="num" :min="1" :max="10" @change="handleChange" />
+                        </div>
+                        <el-button type="success" round>Success</el-button>
                     </div>
                 </div>
             </div>
@@ -71,9 +74,9 @@ export default {
     setup() {
         const value1 = ref(true)
         const value2 = ref(true)
-
+        const num = ref(1)
         return {
-            value1, value2
+            value1, value2, num
         }
     }
 }
@@ -128,6 +131,9 @@ export default {
             &-top {
                 height: 10%;
                 text-align: center;
+                line-height: 52px;
+                font-size: 20px;
+                font-weight: bolder;
             }
 
             &-content {
@@ -287,6 +293,10 @@ export default {
             &-top {
                 height: 10%;
                 text-align: center;
+                border-radius: 5px;
+                font-size: 20px;
+                line-height: 52px;
+                font-weight: bolder;
             }
 
             &-content {
@@ -334,10 +344,24 @@ export default {
 
                 &-servo {
                     width: 80%;
+                    height: 15%;
                     margin: 5% 0;
-                    flex-grow: 1;
                     background-color: #fff;
                     border-radius: 30px;
+                    flex-grow: 1;
+                    display: flex;
+                    justify-content: center;
+                    align-items: center;
+                    flex-direction: column;
+
+                    >div {
+                        padding: 20px;
+                        margin-bottom: 20px;
+                        justify-content: space-around;
+                        font-size: 20px;
+                        display: flex;
+                    }
+
                 }
 
             }
