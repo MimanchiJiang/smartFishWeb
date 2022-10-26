@@ -15,7 +15,7 @@
                             <p v-bind:class="{ error: register.isError }">
                                 {{ register.notice }}
                             </p>
-                            <div class="button" @click="onRegister">创建账号</div>
+                            <div type="submit" class="button" @click="onRegister">创建账号</div>
                         </div>
                     </transition>
                     <h3 @click="showLogin">登录</h3>
@@ -34,6 +34,7 @@
 <script>
 import { ref } from 'vue';
 import { router } from '../router';
+import axios from 'axios'
 
 
 export default {
@@ -61,16 +62,27 @@ export default {
             isShowRegister.value = true;
         }
         const onRegister = () => {
-            if (!/^[\w\u4e00-\u9fa5]{3,15}$/.test(register.username.value)) {
-                register.isError.value = true;
-                register.notice.value = "用户名3~15个字符，仅限于字母数字下划线中文";
+            if (!/^[\w\u4e00-\u9fa5]{3,15}$/.test(register.value.username)) {
+                register.value.isError = true;
+                register.value.notice = "用户名3~15个字符，仅限于字母数字下划线中文";
                 return;
             }
-            if (!/^.{6,16}$/.test(register.password.value)) {
-                register.isError.value = true;
-                register.notice.value = "密码长度为6~16个字符";
+            if (!/^.{6,16}$/.test(register.value.password)) {
+                register.value.isError = true;
+                register.value.notice = "密码长度为6~16个字符";
                 return;
             }
+            console.log(register.value.username)
+            console.log(register.value.password)
+            console.log(axios)
+            axios({
+                url: 'http://localhost:8888/register',
+                method: 'POST',
+                responseType: 'json',
+                data: JSON.stringify({ username: register.value.username, password: register.value.password })
+            }).then(() => {
+                console.log('发送成功')
+            })
 
         }
         const onLogin = () => {
