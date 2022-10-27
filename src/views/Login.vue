@@ -131,7 +131,7 @@ export default {
 
     .main {
         flex: 1;
-        background: rgb(83, 118, 88) url(//cloud.hunger-valley.com/17-12-13/38476998.jpg-middle) center center no-repeat;
+        background: #01847F url(../assets/loginBackground.jpg) center center no-repeat;
         background-size: contain;
 
         svg {

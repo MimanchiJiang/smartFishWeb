@@ -2,8 +2,8 @@
     <Topnav />
     <div class="topNavAndBanner">
         <div class="banner">
-            <h1>Sky-UI</h1>
-            <h2>最初的鸟儿是不会飞翔的，飞翔是他们勇敢跃入峡谷的奖励</h2>
+            <h1>智能鱼缸</h1>
+            <h2>我像只鱼儿在你的荷塘，只为和你守候那皎白月光</h2>
             <p class="actions" @click="toggle">
                 <a></a>
             </p>
@@ -20,14 +20,14 @@
             </li>
             <li>
                 <svg>
-                    <use xlink:href="#icon-typescript"></use>
+                    <use xlink:href="#icon-nodejs"></use>
                 </svg>
-                <h3>基于 TypeScript </h3>
-                <p>源代码采用 TypeScript 书写</p>
+                <h3>基于 NodeJS </h3>
+                <p>后端代码采用 NodeJS 书写</p>
             </li>
             <li>
                 <svg>
-                    <use xlink:href="#icon-light"></use>
+                    <use xlink:href="#icon-Fish1"></use>
                 </svg>
                 <h3>代码易读</h3>
                 <p>每个组件的源代码都极其简洁</p>
@@ -185,7 +185,7 @@ $color: #1bb9b2;
     animation-fill-mode: none, none;
     animation-play-state: running, running;
     animation-name: breath;
-    background: url(../assets/sky.png);
+    background: url(../assets/background.png);
     background-repeat: no-repeat;
     background-size: cover;
     -webkit-background-size: cover;

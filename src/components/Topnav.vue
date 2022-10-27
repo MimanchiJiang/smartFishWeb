@@ -3,7 +3,7 @@
         <div class="logo">
             <router-link to="/">
                 <svg class="icon">
-                    <use xlink:href="#icon-logo"></use>
+                    <use xlink:href="#icon-Fish"></use>
                 </svg>
             </router-link>
         </div>
@@ -79,6 +79,7 @@ $color: rgba(17, 17, 17, 0.85);
         margin-right: auto;
         user-select: none;
         color: white;
+        margin-left: 20px;
 
         >svg {
             width: 32px;
