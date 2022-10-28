@@ -36,7 +36,14 @@ export default {
 
             const option = {
                 title: {
-                    text: '温度检测'
+                    text: '温度检测',
+                    x: 'left',
+                    padding: [10, 0, 0, 50],
+                    textStyle: {
+                        "fontSize": 25,
+                        fontWeight: 'normal',
+                    },
+
                 },
                 tooltip: {
                     trigger: 'axis',

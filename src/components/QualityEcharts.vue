@@ -2,7 +2,6 @@
     <div id="qualityEcharts" class="qualityEcharts">
     </div>
 </template>
-
 <script>
 import * as echarts from 'echarts'
 import { onMounted } from 'vue';
@@ -15,9 +14,9 @@ export default {
             const chartDom = document.getElementById('qualityEcharts');
             const qualityEcharts = echarts.init(chartDom);
             let data = [];
-            let now = new Date(1997, 9, 3);
+            let now = new Date(2022, 10, 1);
             let oneDay = 24 * 3600 * 1000;
-            let value = Math.random() * 1000;
+            let value = Math.random();
             const randomData = () => {
                 now = new Date(+now + oneDay);
                 value = value + Math.random() * 21 - 10;
@@ -35,7 +34,14 @@ export default {
 
             const option = {
                 title: {
-                    text: '水质检测'
+                    text: '水质检测',
+                    x: 'left',
+                    padding: [10, 0, 0, 50],
+                    textStyle: {
+                        "fontSize": 25,
+                        fontWeight: 'normal',
+                    },
+
                 },
                 tooltip: {
                     trigger: 'axis',

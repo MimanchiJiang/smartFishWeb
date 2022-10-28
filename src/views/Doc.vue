@@ -27,12 +27,14 @@
 </template>
 <script lang="ts">
 import Topnav from '../components/topnav.vue'
-import { inject, Ref } from 'vue';
+import { inject, Ref, onMounted, ref } from 'vue';
+import axios from 'axios'
 
 export default {
     components: { Topnav },
     setup() {
         const asideVisible = inject<Ref<boolean>>('asideVisible') //get
+
         return {
             asideVisible
         }

@@ -1,6 +1,15 @@
 <template>
     <div class="equipment">
         <div class="equipment-echarts">
+            <div class="equipment-echarts-topnav">
+                <div class="mqtt-status">
+                    <span>mqtt:</span>
+                    <div :class="mqttStatus ? 'mqtt-status-greenCircle' : 'mqtt-status-redCircle'"></div>
+                </div>
+                <div class="equipment-echarts-topnav-title">
+                    智能鱼缸设备展示页面
+                </div>
+            </div>
             <div class="echarts-quality">
                 <QualityEcharts />
             </div>
@@ -68,15 +77,28 @@
 <script>
 import QualityEcharts from './QualityEcharts.vue';
 import TempEcharts from './TempEcharts.vue';
-import { ref } from 'vue'
+import { ref, onMounted } from 'vue'
+import axios from 'axios'
 export default {
     components: { QualityEcharts, TempEcharts },
     setup() {
         const value1 = ref(true)
         const value2 = ref(true)
         const num = ref(1)
+        const mqttStatus = ref(false)
+        onMounted(() => {
+            axios({
+                url: 'http://localhost:8888/mqtt',
+                method: 'POST',
+            }).then((res) => {
+                console.log(res.data)
+                if (res.data == 'connected') { mqttStatus.value = true } else {
+                    mqttStatus.value = false
+                }
+            })
+        })
         return {
-            value1, value2, num
+            value1, value2, num, mqttStatus
         }
     }
 }
@@ -94,6 +116,55 @@ export default {
         flex-direction: column;
         justify-content: center;
         align-items: center;
+
+        &-topnav {
+            display: flex;
+            align-items: center;
+            width: 100%;
+
+            .mqtt-status {
+                display: flex;
+                justify-content: center;
+                align-items: center;
+
+                >span {
+                    font-size: 20px;
+                    margin-right: 5px;
+                }
+
+
+                &-greenCircle {
+                    width: 20px;
+                    height: 20px;
+                    border-radius: 50%;
+                    background: green;
+                    background-image: radial-gradient(lime, transparent);
+                    background-size: 5px 5px;
+                }
+
+                &-redCircle {
+                    width: 20px;
+                    height: 20px;
+                    border-radius: 50%;
+                    background: rgb(221, 3, 3);
+                    background-image: radial-gradient(rgb(255, 153, 0), transparent);
+                    background-size: 5px 5px;
+                }
+            }
+
+            &-title {
+                flex-grow: 1;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                text-align: center;
+                font-size: 25px;
+                font-weight: bolder;
+                margin-right: 100px;
+            }
+        }
+
+
 
         .echarts-temp {
             background-color: #fff;
@@ -166,7 +237,6 @@ export default {
                         width: 25px;
                         height: 25px;
                         border-radius: 50%;
-                        background-color: green;
                     }
                 }
 
@@ -194,7 +264,6 @@ export default {
                         width: 25px;
                         height: 25px;
                         border-radius: 50%;
-                        background-color: green;
                     }
                 }
 
@@ -222,7 +291,6 @@ export default {
                         width: 25px;
                         height: 25px;
                         border-radius: 50%;
-                        background-color: green;
                     }
                 }
 
@@ -250,7 +318,6 @@ export default {
                         width: 25px;
                         height: 25px;
                         border-radius: 50%;
-                        background-color: green;
                     }
                 }
 
@@ -278,7 +345,6 @@ export default {
                         width: 25px;
                         height: 25px;
                         border-radius: 50%;
-                        background-color: green;
                     }
                 }
             }

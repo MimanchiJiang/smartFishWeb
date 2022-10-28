@@ -9,7 +9,7 @@
         </div>
         <ul class="menu">
             <li>
-                <a href="https://github.com/MimanchiJiang/xue-vue3" target="_blank">GitHub</a>
+                <a href="https://github.com/MimanchiJiang/smartFishWeb" target="_blank">GitHub</a>
             </li>
             <li>
                 <a href="https://i.csdn.net/#/user-center/profile?spm=1000.2115.3001.5111" target="_blank">CSDN</a>
