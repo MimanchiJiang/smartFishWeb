@@ -53,19 +53,19 @@
                     <div class="equipment-control-content-light">
                         <span>灯带开关</span>
                         <div>
-                            <el-switch v-model="value1" />
+                            <el-switch v-model="lightStatus" @click="lightControl" />
                         </div>
                     </div>
                     <div class="equipment-control-content-pump">
                         <span>水泵开关</span>
                         <div>
-                            <el-switch v-model="value2" />
+                            <el-switch v-model="pumpStatus" @click="pumpControl" />
                         </div>
                     </div>
                     <div class="equipment-control-content-servo">
                         <div>
                             <span>舵机开关</span>
-                            <el-input-number v-model="num" :min="1" :max="10" @change="handleChange" />
+                            <el-input-number v-model="servoTime" :min="1" :max="10" @change="handleChange" />
                         </div>
                         <el-button type="success" round>Success</el-button>
                     </div>
@@ -82,10 +82,39 @@ import axios from 'axios'
 export default {
     components: { QualityEcharts, TempEcharts },
     setup() {
-        const value1 = ref(true)
-        const value2 = ref(true)
-        const num = ref(1)
+        const lightStatus = ref(true)
+        const pumpStatus = ref(true)
+        const servoTime = ref(1)
         const mqttStatus = ref(false)
+
+        const lightControl = () => {
+            if (lightStatus.value == false) {
+                axios({
+                    url: 'http://localhost:8888/light',
+                    method: 'POST',
+                    responseType: 'json',
+                    data: JSON.stringify({ light: "false" })
+                })
+                console.log('灯带关')
+            } else {
+                axios({
+                    url: 'http://localhost:8888/light',
+                    method: 'POST',
+                    responseType: 'json',
+                    data: JSON.stringify({ light: "true" })
+                })
+                console.log('灯带开')
+            }
+        }
+
+        const pumpControl = () => {
+            if (pumpStatus.value == false) {
+                console.log('水泵关')
+            } else {
+                console.log('水泵开')
+            }
+        }
+
         onMounted(() => {
             axios({
                 url: 'http://localhost:8888/mqtt',
@@ -98,7 +127,7 @@ export default {
             })
         })
         return {
-            value1, value2, num, mqttStatus
+            lightStatus, pumpStatus, servoTime, mqttStatus, lightControl, pumpControl
         }
     }
 }

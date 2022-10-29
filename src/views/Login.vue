@@ -72,9 +72,6 @@ export default {
                 register.value.notice = "密码长度为6~16个字符";
                 return;
             }
-            console.log(register.value.username)
-            console.log(register.value.password)
-            console.log(axios)
             axios({
                 url: 'http://localhost:8888/register',
                 method: 'POST',
