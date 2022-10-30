@@ -101,7 +101,7 @@ export default {
                     url: 'http://localhost:8888/light',
                     method: 'POST',
                     responseType: 'json',
-                    data: JSON.stringify({ light: "true" })
+                    data: JSON.stringify({ light: "false" })
                 })
                 console.log('灯带开')
             }
