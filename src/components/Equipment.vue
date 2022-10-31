@@ -88,31 +88,23 @@ export default {
         const mqttStatus = ref(false)
 
         const lightControl = () => {
-            if (lightStatus.value == false) {
-                axios({
-                    url: 'http://localhost:8888/light',
-                    method: 'POST',
-                    responseType: 'json',
-                    data: JSON.stringify({ light: "false" })
-                })
-                console.log('灯带关')
-            } else {
-                axios({
-                    url: 'http://localhost:8888/light',
-                    method: 'POST',
-                    responseType: 'json',
-                    data: JSON.stringify({ light: "false" })
-                })
-                console.log('灯带开')
-            }
+            axios({
+                url: 'http://localhost:8888/light',
+                method: 'POST',
+                responseType: 'json',
+                data: JSON.stringify({ light: lightStatus.value, pump: pumpStatus.value })
+            })
+            console.log(lightStatus.value)
+
         }
 
         const pumpControl = () => {
-            if (pumpStatus.value == false) {
-                console.log('水泵关')
-            } else {
-                console.log('水泵开')
-            }
+            axios({
+                url: 'http://localhost:8888/pump',
+                method: 'POST',
+                responseType: 'json',
+                data: JSON.stringify({ light: lightStatus.value, pump: pumpStatus.value })
+            })
         }
 
         onMounted(() => {
