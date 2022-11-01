@@ -77,7 +77,7 @@
 <script>
 import QualityEcharts from './QualityEcharts.vue';
 import TempEcharts from './TempEcharts.vue';
-import { ref, onMounted } from 'vue'
+import { ref, onMounted, onBeforeUnmount, onBeforeMount } from 'vue'
 import axios from 'axios'
 export default {
     components: { QualityEcharts, TempEcharts },
@@ -86,6 +86,7 @@ export default {
         const pumpStatus = ref(true)
         const servoTime = ref(1)
         const mqttStatus = ref(false)
+        const timer = ref("")
 
         const lightControl = () => {
             axios({
@@ -106,8 +107,7 @@ export default {
                 data: JSON.stringify({ light: lightStatus.value, pump: pumpStatus.value })
             })
         }
-
-        onMounted(() => {
+        onBeforeMount(() => {
             axios({
                 url: 'http://localhost:8888/mqtt',
                 method: 'POST',
@@ -118,6 +118,33 @@ export default {
                 }
             })
         })
+
+        onMounted(() => {
+            // axios({
+            //     url: 'http://localhost:8888/mqtt',
+            //     method: 'POST',
+            // }).then((res) => {
+            //     console.log(res.data)
+            //     if (res.data == 'connected') { mqttStatus.value = true } else {
+            //         mqttStatus.value = false
+            //     }
+            // })
+            timer.value = setInterval(() => {
+                axios({
+                    url: 'http://localhost:8888/data',
+                    method: 'POST'
+                }).then((res) => {
+                    lightStatus.value = res.data.light
+                    pumpStatus.value = res.data.shuibeng
+                    console.log(res.data)
+                })
+            }, 2000)
+        })
+
+        onBeforeUnmount(() => {
+            clearInterval(timer.value)
+        })
+
         return {
             lightStatus, pumpStatus, servoTime, mqttStatus, lightControl, pumpControl
         }
