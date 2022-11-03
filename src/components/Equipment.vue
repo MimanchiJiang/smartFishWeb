@@ -120,23 +120,25 @@ export default {
         })
 
         onMounted(() => {
-            // axios({
-            //     url: 'http://localhost:8888/mqtt',
-            //     method: 'POST',
-            // }).then((res) => {
-            //     console.log(res.data)
-            //     if (res.data == 'connected') { mqttStatus.value = true } else {
-            //         mqttStatus.value = false
-            //     }
-            // })
             timer.value = setInterval(() => {
                 axios({
                     url: 'http://localhost:8888/data',
                     method: 'POST'
                 }).then((res) => {
-                    lightStatus.value = res.data.light
-                    pumpStatus.value = res.data.shuibeng
-                    console.log(res.data)
+                    console.log(res)
+                    console.log(res.data[0].light)
+                    if (res.data[0].light == '0') {
+                        lightStatus.value = false
+                    }
+                    if (res.data[0].light == '1') {
+                        lightStatus.value = true
+                    }
+                    if (res.data[0].pump == '0') {
+                        pumpStatus.value = false
+                    }
+                    if (res.data[0].pump == '1') {
+                        pumpStatus.value = true
+                    }
                 })
             }, 2000)
         })
