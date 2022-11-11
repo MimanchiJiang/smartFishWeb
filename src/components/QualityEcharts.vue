@@ -4,33 +4,23 @@
 </template>
 <script>
 import * as echarts from 'echarts'
-import { onMounted } from 'vue';
+import { onMounted, ref, watch } from 'vue';
+import axios from 'axios';
 export default {
     setup() {
+        const timer = ref("")
+        let echartDataArray = []
+        let demo = []
+        let time = []
+        let demo1 = []
+        let time1 = []
+
         onMounted(() => {
             qualityEcharts()
         })
         const qualityEcharts = () => {
             const chartDom = document.getElementById('qualityEcharts');
             const qualityEcharts = echarts.init(chartDom);
-            let data = [];
-            let now = new Date(2022, 10, 1);
-            let oneDay = 24 * 3600 * 1000;
-            let value = Math.random();
-            const randomData = () => {
-                now = new Date(+now + oneDay);
-                value = value + Math.random() * 21 - 10;
-                return {
-                    name: now.toString(),
-                    value: [
-                        [now.getFullYear(), now.getMonth() + 1, now.getDate()].join('/'),
-                        Math.round(value)
-                    ]
-                };
-            }
-            for (var i = 0; i < 1000; i++) {
-                data.push(randomData());
-            }
 
             const option = {
                 title: {
@@ -45,62 +35,63 @@ export default {
                 },
                 tooltip: {
                     trigger: 'axis',
-                    formatter: function (params) {
-                        params = params[0];
-                        var date = new Date(params.name);
-                        return (
-                            date.getDate() +
-                            '/' +
-                            (date.getMonth() + 1) +
-                            '/' +
-                            date.getFullYear() +
-                            ' : ' +
-                            params.value[1]
-                        );
-                    },
                     axisPointer: {
                         animation: false
                     }
                 },
                 xAxis: {
-                    type: 'time',
-                    splitLine: {
-                        show: false
-                    }
+                    type: 'category',
+                    axisLabel: {
+                        rotate: 45,
+                    },
+                    data: []
                 },
                 yAxis: {
                     type: 'value',
-                    boundaryGap: [0, '100%'],
-                    splitLine: {
-                        show: false
-                    }
                 },
                 series: [
                     {
-                        name: 'Fake Data',
-                        type: 'line',
-                        showSymbol: false,
-                        data: data
+                        data: [],
+                        type: 'line'
                     }
                 ]
             };
             setInterval(function () {
-                for (var i = 0; i < 5; i++) {
-                    data.shift();
-                    data.push(randomData());
-                }
+                axios({
+                    url: 'http://localhost:8888/echartData',
+                    method: 'POST'
+                }).then((res) => {
+                    echartDataArray = JSON.parse(JSON.stringify(res.data))
+                    echartDataArray.forEach(element => {
+                        demo1.push(parseFloat(element.quality))
+                    });
+                    echartDataArray.forEach(e => {
+                        time1.push(e.time)
+                    })
+                    time = time1.reverse()
+                    demo = demo1.reverse()
+                })
+
                 qualityEcharts.setOption({
+                    xAxis: {
+                        data: time
+                    },
                     series: [
                         {
-                            data: data
+                            data: demo
                         }
                     ]
                 });
+                for (var i = 0; i < 10; i++) {
+                    time.shift();
+                    demo.shift()
+                }
             }, 1000);
             option && qualityEcharts.setOption(option);
             window.addEventListener("resize", function () {
                 qualityEcharts.resize();
             });
+
         }
     }
 }

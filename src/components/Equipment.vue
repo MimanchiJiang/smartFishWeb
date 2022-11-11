@@ -77,7 +77,7 @@
 <script>
 import QualityEcharts from './QualityEcharts.vue';
 import TempEcharts from './TempEcharts.vue';
-import { ref, onMounted, onBeforeUnmount, onBeforeMount } from 'vue'
+import { ref, onMounted, onBeforeUnmount, onBeforeMount, toRefs } from 'vue'
 import axios from 'axios'
 export default {
     components: { QualityEcharts, TempEcharts },
@@ -121,12 +121,11 @@ export default {
 
         onMounted(() => {
             timer.value = setInterval(() => {
+
                 axios({
                     url: 'http://localhost:8888/data',
                     method: 'POST'
                 }).then((res) => {
-                    console.log(res)
-                    console.log(res.data[0].light)
                     if (res.data[0].light == '0') {
                         lightStatus.value = false
                     }
@@ -140,7 +139,7 @@ export default {
                         pumpStatus.value = true
                     }
                 })
-            }, 2000)
+            }, 1000)
         })
 
         onBeforeUnmount(() => {
