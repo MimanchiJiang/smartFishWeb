@@ -4,7 +4,7 @@
 </template>
 <script>
 import * as echarts from 'echarts'
-import { onMounted, ref, watch } from 'vue';
+import { onMounted, ref, onBeforeUnmount } from 'vue';
 import axios from 'axios';
 export default {
     setup() {
@@ -41,9 +41,9 @@ export default {
                 },
                 xAxis: {
                     type: 'category',
-                    axisLabel: {
-                        rotate: 45,
-                    },
+                    // axisLabel: {
+                    //     rotate: 45,
+                    // },
                     data: []
                 },
                 yAxis: {
@@ -56,7 +56,7 @@ export default {
                     }
                 ]
             };
-            setInterval(function () {
+            timer.value = setInterval(() => {
                 axios({
                     url: 'http://localhost:8888/echartData',
                     method: 'POST'
@@ -82,7 +82,7 @@ export default {
                         }
                     ]
                 });
-                for (var i = 0; i < 10; i++) {
+                for (var i = 0; i < 5; i++) {
                     time.shift();
                     demo.shift()
                 }
@@ -91,6 +91,9 @@ export default {
             window.addEventListener("resize", function () {
                 qualityEcharts.resize();
             });
+            onBeforeUnmount(() => {
+                clearInterval(timer.value)
+            })
 
         }
     }

@@ -18,9 +18,6 @@ export default {
         onMounted(() => {
             tempEcharts()
         })
-        onBeforeUnmount(() => {
-            clearInterval(timer.value)
-        })
         const tempEcharts = () => {
             const chartDom = document.getElementById('tempEcharts');
             const tempEcharts = echarts.init(chartDom);
@@ -44,9 +41,9 @@ export default {
                 },
                 xAxis: {
                     type: 'category',
-                    axisLabel: {
-                        rotate: 45,
-                    },
+                    // axisLabel: {
+                    //     rotate: 45,
+                    // },
                     data: []
                 },
                 yAxis: {
@@ -59,7 +56,8 @@ export default {
                     }
                 ]
             };
-            setInterval(function () {
+            timer.value = setInterval(() => {
+                console.log("111")
                 axios({
                     url: 'http://localhost:8888/echartData',
                     method: 'POST'
@@ -85,7 +83,7 @@ export default {
                         }
                     ]
                 });
-                for (var i = 0; i < 10; i++) {
+                for (var i = 0; i < 5; i++) {
                     time.shift();
                     demo.shift()
                 }
@@ -94,6 +92,10 @@ export default {
             window.addEventListener("resize", function () {
                 tempEcharts.resize();
             });
+            onBeforeUnmount(() => {
+                console.log("temp定时器被消除了")
+                clearInterval(timer.value)
+            })
         }
         return {
             time

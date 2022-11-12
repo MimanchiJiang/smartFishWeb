@@ -121,7 +121,6 @@ export default {
 
         onMounted(() => {
             timer.value = setInterval(() => {
-
                 axios({
                     url: 'http://localhost:8888/data',
                     method: 'POST'

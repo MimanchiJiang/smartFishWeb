@@ -15,7 +15,7 @@
                             <p v-bind:class="{ error: register.isError }">
                                 {{ register.notice }}
                             </p>
-                            <div type="submit" class="button" @click="onRegister">创建账号</div>
+                            <div type="submit" class="button" @click="onRegister" @keydown.enter="onRegister">创建账号</div>
                         </div>
                     </transition>
                     <h3 @click="showLogin">登录</h3>
@@ -23,7 +23,7 @@
                         <input type="text" v-model="login.username" placeholder="输入用户名" />
                         <input @keyup.enter="onLogin" type="password" v-model="login.password" placeholder="密码" />
                         <p v-bind:class="{ error: login.isError }">{{ login.notice }}</p>
-                        <div class="button" @click="onLogin">登录</div>
+                        <div class="button" @click="onLogin" @keydown.enter="onLogin">登录</div>
                     </div>
                 </div>
             </div>
