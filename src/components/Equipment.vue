@@ -95,7 +95,7 @@ export default {
                 url: 'http://localhost:8888/light',
                 method: 'POST',
                 responseType: 'json',
-                data: JSON.stringify({ light: lightStatus.value, pump: pumpStatus.value })
+                data: JSON.stringify({ light: lightStatus.value, pump: pumpStatus.value, temp: echartDataArray.value[4].temp, quality: echartDataArray.value[4].quality })
             })
             console.log(lightStatus.value)
 
@@ -106,7 +106,7 @@ export default {
                 url: 'http://localhost:8888/pump',
                 method: 'POST',
                 responseType: 'json',
-                data: JSON.stringify({ light: lightStatus.value, pump: pumpStatus.value })
+                data: JSON.stringify({ light: lightStatus.value, pump: pumpStatus.value, temp: echartDataArray.value[4].temp, quality: echartDataArray.value[4].quality })
             })
         }
         onBeforeMount(() => {
@@ -128,6 +128,7 @@ export default {
                     method: 'POST'
                 }).then((res) => {
                     echartDataArray.value = JSON.parse(JSON.stringify(res.data))
+                    console.log(echartDataArray.value[4].temp)
                 })
 
                 axios({
