@@ -7,13 +7,15 @@ import * as echarts from 'echarts'
 import { onMounted, onBeforeUnmount, ref } from 'vue';
 import axios from 'axios';
 export default {
-    setup() {
+    props: {
+        echartDataArray: Array
+    },
+    setup(props) {
         const timer = ref("")
-        let echartDataArray = []
-        let demo = []
+        let temp = []
         let time = []
-        let demo1 = []
-        let time1 = []
+        let tempReverse = []
+        let timeReverse = []
 
         onMounted(() => {
             tempEcharts()
@@ -57,35 +59,30 @@ export default {
                 ]
             };
             timer.value = setInterval(() => {
-                console.log("111")
-                axios({
-                    url: 'http://localhost:8888/echartData',
-                    method: 'POST'
-                }).then((res) => {
-                    echartDataArray = JSON.parse(JSON.stringify(res.data))
-                    echartDataArray.forEach(element => {
-                        demo1.push(parseFloat(element.temp))
-                    });
-                    echartDataArray.forEach(e => {
-                        time1.push(e.time)
-                    })
-                    time = time1.reverse()
-                    demo = demo1.reverse()
+
+                props.echartDataArray.forEach(element => {
+                    temp.push(parseFloat(element.temp))
+                });
+                props.echartDataArray.forEach(e => {
+                    time.push(e.time)
                 })
+                timeReverse = time.reverse()
+                tempReverse = temp.reverse()
+
 
                 tempEcharts.setOption({
                     xAxis: {
-                        data: time
+                        data: timeReverse
                     },
                     series: [
                         {
-                            data: demo
+                            data: tempReverse
                         }
                     ]
                 });
                 for (var i = 0; i < 5; i++) {
-                    time.shift();
-                    demo.shift()
+                    timeReverse.shift();
+                    tempReverse.shift()
                 }
             }, 1000);
             option && tempEcharts.setOption(option);

@@ -7,16 +7,19 @@ import * as echarts from 'echarts'
 import { onMounted, ref, onBeforeUnmount } from 'vue';
 import axios from 'axios';
 export default {
-    setup() {
+    props: {
+        echartDataArray: Array
+    },
+    setup(props) {
         const timer = ref("")
-        let echartDataArray = []
-        let demo = []
+        let quality = []
         let time = []
-        let demo1 = []
-        let time1 = []
+        let qualityReverse = []
+        let timeReverse = []
 
         onMounted(() => {
             qualityEcharts()
+            console.log(props.echartDataArray)
         })
         const qualityEcharts = () => {
             const chartDom = document.getElementById('qualityEcharts');
@@ -57,34 +60,27 @@ export default {
                 ]
             };
             timer.value = setInterval(() => {
-                axios({
-                    url: 'http://localhost:8888/echartData',
-                    method: 'POST'
-                }).then((res) => {
-                    echartDataArray = JSON.parse(JSON.stringify(res.data))
-                    echartDataArray.forEach(element => {
-                        demo1.push(parseFloat(element.quality))
-                    });
-                    echartDataArray.forEach(e => {
-                        time1.push(e.time)
-                    })
-                    time = time1.reverse()
-                    demo = demo1.reverse()
+                props.echartDataArray.forEach(element => {
+                    quality.push(parseFloat(element.quality))
+                });
+                props.echartDataArray.forEach(e => {
+                    time.push(e.time)
                 })
-
+                timeReverse = time.reverse()
+                qualityReverse = quality.reverse()
                 qualityEcharts.setOption({
                     xAxis: {
-                        data: time
+                        data: timeReverse
                     },
                     series: [
                         {
-                            data: demo
+                            data: qualityReverse
                         }
                     ]
                 });
                 for (var i = 0; i < 5; i++) {
-                    time.shift();
-                    demo.shift()
+                    timeReverse.shift();
+                    qualityReverse.shift()
                 }
             }, 1000);
             option && qualityEcharts.setOption(option);
@@ -92,6 +88,7 @@ export default {
                 qualityEcharts.resize();
             });
             onBeforeUnmount(() => {
+                console.log(props.echartDataArray)
                 clearInterval(timer.value)
             })
 

@@ -11,10 +11,10 @@
                 </div>
             </div>
             <div class="echarts-quality">
-                <QualityEcharts />
+                <QualityEcharts :echartDataArray="echartDataArray" />
             </div>
             <div class="echarts-temp">
-                <TempEcharts />
+                <TempEcharts :echartDataArray="echartDataArray" />
             </div>
         </div>
         <div class="equipment-sideBar">
@@ -88,6 +88,8 @@ export default {
         const mqttStatus = ref(false)
         const timer = ref("")
 
+        let echartDataArray = ref([])
+
         const lightControl = () => {
             axios({
                 url: 'http://localhost:8888/light',
@@ -122,6 +124,13 @@ export default {
         onMounted(() => {
             timer.value = setInterval(() => {
                 axios({
+                    url: 'http://localhost:8888/echartData',
+                    method: 'POST'
+                }).then((res) => {
+                    echartDataArray.value = JSON.parse(JSON.stringify(res.data))
+                })
+
+                axios({
                     url: 'http://localhost:8888/data',
                     method: 'POST'
                 }).then((res) => {
@@ -146,7 +155,7 @@ export default {
         })
 
         return {
-            lightStatus, pumpStatus, servoTime, mqttStatus, lightControl, pumpControl
+            lightStatus, pumpStatus, servoTime, mqttStatus, echartDataArray, lightControl, pumpControl
         }
     }
 }
