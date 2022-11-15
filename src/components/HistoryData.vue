@@ -6,7 +6,7 @@
             <el-button @click="select()">查询</el-button>
         </div>
         <div class="history-data">
-            <el-table :data="tableData" style="width: 100%">
+            <el-table :data="tableData.slice((currentPage - 1) * pageSize, currentPage * pageSize)" style="width: 100%">
                 <el-table-column prop="" label="" width="200" />
                 <el-table-column prop="light" label="灯带" width="200" />
                 <el-table-column prop="pump" label="水泵" width="200" />
@@ -15,6 +15,9 @@
                 <el-table-column prop="temp" label="温度" width="200" />
                 <el-table-column prop="time" label="时间" />
             </el-table>
+            <el-pagination layout=" prev, pager, next, jumper" :total="tableData.length" @size-change="handleSizeChange"
+                @current-change="handleCurrentChange" :page-size="pageSize">
+            </el-pagination>
             <div class="fixed"><a href="#top">Back</a></div>
         </div>
 
@@ -25,6 +28,8 @@ import { ref, onMounted } from 'vue';
 import axios from 'axios'
 const input = ref('')
 const tableData = ref([])
+const currentPage = ref(1)
+const pageSize = ref(20)
 
 
 
@@ -47,6 +52,17 @@ const history = () => {
         console.log(res)
         tableData.value = res.data
     })
+}
+
+const handleSizeChange = (val) => {
+    console.log(`每页 ${val} 条`);
+    currentPage.value = 1;
+    pageSize.value = val;
+}
+
+const handleCurrentChange = (val) => {
+    console.log(`当前页: ${val}`);
+    currentPage.value = val;
 }
 
 onMounted(() => {

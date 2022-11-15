@@ -64,11 +64,13 @@
                     </div>
                     <div class="equipment-control-content-servo">
                         <div>
-                            <span>舵机开关</span>
+                            <span>定时喂食（h）</span>
                             <el-input-number v-model="servoTime" :min="1" :max="10" @change="handleChange" />
                         </div>
-                        <el-button type="success" round>Success</el-button>
+                        <el-button type="success" round @click="TimingFeed">发送</el-button>
                     </div>
+                    <span>自动模式开关</span>
+                    <el-switch v-model="autoStatus" @click="autoControl" />
                 </div>
             </div>
         </div>
@@ -87,6 +89,7 @@ export default {
         const servoTime = ref(1)
         const mqttStatus = ref(false)
         const timer = ref("")
+        const autoStatus = ref(true)
 
         let echartDataArray = ref([])
 
@@ -99,6 +102,23 @@ export default {
             })
             console.log(lightStatus.value)
 
+        }
+        const autoControl = () => {
+            axios({
+                url: 'http://localhost:8888/autoControl',
+                method: 'POST',
+                data: JSON.stringify({ autoStatus: autoStatus.value })
+            })
+        }
+        const TimingFeed = () => {
+            axios({
+                url: 'http://localhost:8888/TimingFeed',
+                method: 'POST',
+                data: JSON.stringify({ servoTime: servoTime.value })
+            }).then((res) => {
+                console.log(res)
+                window.alert(`定时成功，将在${servoTime.value}小时后进行喂食`)
+            })
         }
 
         const pumpControl = () => {
@@ -131,6 +151,7 @@ export default {
                     console.log(echartDataArray.value[4].temp)
                 })
 
+
                 axios({
                     url: 'http://localhost:8888/data',
                     method: 'POST'
@@ -147,6 +168,12 @@ export default {
                     if (res.data[0].pump == '1') {
                         pumpStatus.value = true
                     }
+                    if (res.data[0].autoControl == '0') {
+                        autoStatus.value = false
+                    }
+                    if (res.data[0].autoControl == '1') {
+                        autoStatus.value = true
+                    }
                 })
             }, 1000)
         })
@@ -156,7 +183,7 @@ export default {
         })
 
         return {
-            lightStatus, pumpStatus, servoTime, mqttStatus, echartDataArray, lightControl, pumpControl
+            lightStatus, pumpStatus, servoTime, mqttStatus, echartDataArray, autoStatus, lightControl, pumpControl, TimingFeed, autoControl
         }
     }
 }
