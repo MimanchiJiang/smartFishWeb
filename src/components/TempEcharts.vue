@@ -5,7 +5,6 @@
 <script>
 import * as echarts from 'echarts'
 import { onMounted, onBeforeUnmount, ref } from 'vue';
-import axios from 'axios';
 export default {
     props: {
         echartDataArray: Array
@@ -20,6 +19,16 @@ export default {
         onMounted(() => {
             tempEcharts()
         })
+        const timestampToTime = (timestamp) => {
+            var date = new Date(timestamp);//时间戳为10位需*1000，时间戳为13位的话不需乘1000
+            var Y = date.getFullYear() + '-';
+            var M = (date.getMonth() + 1 < 10 ? '0' + (date.getMonth() + 1) : date.getMonth() + 1) + '-';
+            var D = date.getDate() + ' ';
+            var h = (date.getHours() < 10 ? '0' + (date.getHours()) : date.getHours()) + ':';
+            var m = (date.getMinutes() < 10 ? '0' + (date.getMinutes()) : date.getMinutes()) + ':';
+            var s = (date.getSeconds() < 10 ? '0' + (date.getSeconds()) : date.getSeconds());
+            return h + m + s;
+        }
         const tempEcharts = () => {
             const chartDom = document.getElementById('tempEcharts');
             const tempEcharts = echarts.init(chartDom);
@@ -64,7 +73,7 @@ export default {
                     temp.push(parseFloat(element.temp))
                 });
                 props.echartDataArray.forEach(e => {
-                    time.push(e.time)
+                    time.push(timestampToTime(Date.parse(e.time)))
                 })
                 timeReverse = time.reverse()
                 tempReverse = temp.reverse()

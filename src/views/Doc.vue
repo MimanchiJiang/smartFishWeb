@@ -64,8 +64,6 @@ export default {
 .content {
     display: flex;
 
-
-
     >aside {
         flex-shrink: 0;
     }
@@ -124,6 +122,7 @@ aside {
                 color: rgb(1, 1, 1);
                 font-size: 18px;
 
+
                 @media (max-width: 800px) {
                     font-size: 13px;
                 }
@@ -144,6 +143,7 @@ aside {
                     right: 0;
                     background-color: rgba(87, 87, 87, 0.5);
                     margin-top: -15px;
+
                 }
             }
 
@@ -158,6 +158,7 @@ aside {
         width: 2px;
         height: 1280px;
         background: rgba(255, 255, 255, 0.14);
+
     }
 }
 

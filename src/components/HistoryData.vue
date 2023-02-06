@@ -7,18 +7,17 @@
         </div>
         <div class="history-data">
             <el-table :data="tableData.slice((currentPage - 1) * pageSize, currentPage * pageSize)" style="width: 100%">
-                <el-table-column prop="" label="" width="200" />
-                <el-table-column prop="light" label="灯带" width="200" />
-                <el-table-column prop="pump" label="水泵" width="200" />
-                <el-table-column prop="feed" label="舵机" width="200" />
-                <el-table-column prop="quality" label="水质" width="200" />
-                <el-table-column prop="temp" label="温度" width="200" />
-                <el-table-column prop="time" label="时间" />
+                <el-table-column prop="" label="" width="100" />
+                <el-table-column prop="light" label="灯带" align="center" width="200" />
+                <el-table-column prop="pump" label="水泵" align="center" width="200" />
+                <el-table-column prop="feed" label="舵机" align="center" width="200" />
+                <el-table-column prop="quality" label="水质" align="center" width="200" />
+                <el-table-column prop="temp" label="温度" align="center" width="200" />
+                <el-table-column prop="time" label="时间" align="center" width="200" sortable />
             </el-table>
             <el-pagination layout=" prev, pager, next, jumper" :total="tableData.length" @size-change="handleSizeChange"
                 @current-change="handleCurrentChange" :page-size="pageSize">
             </el-pagination>
-            <div class="fixed"><a href="#top">Back</a></div>
         </div>
 
     </div>
@@ -31,7 +30,16 @@ const tableData = ref([])
 const currentPage = ref(1)
 const pageSize = ref(20)
 
-
+const timestampToTime = (timestamp) => {
+    var date = new Date(timestamp);//时间戳为10位需*1000，时间戳为13位的话不需乘1000
+    var Y = date.getFullYear() + '-';
+    var M = (date.getMonth() + 1 < 10 ? '0' + (date.getMonth() + 1) : date.getMonth() + 1) + '-';
+    var D = date.getDate() + ' ';
+    var h = (date.getHours() < 10 ? '0' + (date.getHours()) : date.getHours()) + ':';
+    var m = (date.getMinutes() < 10 ? '0' + (date.getMinutes()) : date.getMinutes()) + ':';
+    var s = (date.getSeconds() < 10 ? '0' + (date.getSeconds()) : date.getSeconds());
+    return Y + M + D + h + m + s;
+}
 
 
 const select = () => {
@@ -49,8 +57,36 @@ const history = () => {
         url: 'http://localhost:8888/history',
         method: 'POST',
     }).then((res) => {
-        console.log(res)
         tableData.value = res.data
+        console.log(tableData.value)
+        tableData.value.forEach((e) => {
+            //@ts-ignore
+            e.time = timestampToTime(Date.parse(e.time))
+            //@ts-ignore
+            if (e.light == '0') {
+                //@ts-ignore
+                e.light = '关闭'
+            } else {
+                //@ts-ignore
+                e.light = '开启'
+            }
+            //@ts-ignore
+            if (e.pump == '0') {
+                //@ts-ignore
+                e.pump = '关闭'
+            } else {
+                //@ts-ignore
+                e.pump = '开启'
+            }
+            //@ts-ignore
+            if (e.feed == '0') {
+                //@ts-ignore
+                e.feed = '关闭'
+            } else {
+                //@ts-ignore
+                e.feed = '开启'
+            }
+        })
     })
 }
 
@@ -91,18 +127,6 @@ onMounted(() => {
 
     &-data {
         margin-top: 50px;
-    }
-
-    .fixed {
-        width: 100px;
-        height: 100px;
-        border-radius: 50%;
-        position: fixed;
-        right: 0;
-        bottom: 0;
-        background-color: #fff;
-        line-height: 100px;
-        text-align: center;
     }
 }
 </style>

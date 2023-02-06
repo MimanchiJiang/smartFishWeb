@@ -18,38 +18,17 @@
             </div>
         </div>
         <div class="equipment-sideBar">
-            <div class="equipment-status">
-                <div class="equipment-status-top">
-                    <span>设备状态显示模块</span>
-                </div>
-                <div class="equipment-status-content">
-                    <div class="equipment-status-content-light">
-                        <span>灯光</span>
-                        <div class="light-status"></div>
-                    </div>
-                    <div class="equipment-status-content-temp">
-                        <span>温度传感器</span>
-                        <div class="temp-status"></div>
-                    </div>
-                    <div class="equipment-status-content-servo">
-                        <span>舵机</span>
-                        <div class="servo-status"></div>
-                    </div>
-                    <div class="equipment-status-content-quality">
-                        <span>水质传感器</span>
-                        <div class="quality-status"></div>
-                    </div>
-                    <div class="equipment-status-content-pump">
-                        <span>水泵</span>
-                        <div class="pump-status"></div>
-                    </div>
-                </div>
-            </div>
             <div class="equipment-control">
                 <div class="equipment-control-top">
                     <span>设备控制模块</span>
                 </div>
                 <div class="equipment-control-content">
+                    <div class="equipment-control-content-light">
+                        <span>自动模式开关</span>
+                        <div>
+                            <el-switch v-model="autoStatus" @click="autoControl" />
+                        </div>
+                    </div>
                     <div class="equipment-control-content-light">
                         <span>灯带开关</span>
                         <div>
@@ -69,8 +48,7 @@
                         </div>
                         <el-button type="success" round @click="TimingFeed">发送</el-button>
                     </div>
-                    <span>自动模式开关</span>
-                    <el-switch v-model="autoStatus" @click="autoControl" />
+                    <el-button @click="lightState">修改灯带模式</el-button>
                 </div>
             </div>
         </div>
@@ -90,15 +68,35 @@ export default {
         const mqttStatus = ref(false)
         const timer = ref("")
         const autoStatus = ref(true)
+        const lightShowState = ref(0)
 
         let echartDataArray = ref([])
+
+        const lightState = () => {
+            axios({
+                url: 'http://localhost:8888/lightState',
+                method: 'POST',
+                responseType: 'json',
+                data: JSON.stringify({ light: lightStatus.value, lightShowState: lightShowState.value, pump: pumpStatus.value, temp: echartDataArray.value[4].temp, quality: echartDataArray.value[4].quality })
+            })
+            console.log(lightStatus.value)
+            if (lightShowState.value < 3) {
+                lightShowState.value++
+            } else {
+                lightShowState.value = 1
+            }
+            console.log(lightShowState.value)
+            console.log(lightStatus.value)
+
+        }
+
 
         const lightControl = () => {
             axios({
                 url: 'http://localhost:8888/light',
                 method: 'POST',
                 responseType: 'json',
-                data: JSON.stringify({ light: lightStatus.value, pump: pumpStatus.value, temp: echartDataArray.value[4].temp, quality: echartDataArray.value[4].quality })
+                data: JSON.stringify({ light: lightStatus.value, lightShowState: lightShowState.value, pump: pumpStatus.value, temp: echartDataArray.value[4].temp, quality: echartDataArray.value[4].quality })
             })
             console.log(lightStatus.value)
 
@@ -107,7 +105,8 @@ export default {
             axios({
                 url: 'http://localhost:8888/autoControl',
                 method: 'POST',
-                data: JSON.stringify({ autoStatus: autoStatus.value })
+                data: JSON.stringify({ autoStatus: autoStatus.value }),
+
             })
         }
         const TimingFeed = () => {
@@ -126,7 +125,7 @@ export default {
                 url: 'http://localhost:8888/pump',
                 method: 'POST',
                 responseType: 'json',
-                data: JSON.stringify({ light: lightStatus.value, pump: pumpStatus.value, temp: echartDataArray.value[4].temp, quality: echartDataArray.value[4].quality })
+                data: JSON.stringify({ light: lightStatus.value, lightShowState: lightShowState.value, pump: pumpStatus.value, temp: echartDataArray.value[4].temp, quality: echartDataArray.value[4].quality })
             })
         }
         onBeforeMount(() => {
@@ -141,14 +140,16 @@ export default {
             })
         })
 
+
         onMounted(() => {
             timer.value = setInterval(() => {
                 axios({
                     url: 'http://localhost:8888/echartData',
+                    // 宽带
+                    // url: 'http://10.149.3.126:8888/echartData',
                     method: 'POST'
                 }).then((res) => {
                     echartDataArray.value = JSON.parse(JSON.stringify(res.data))
-                    console.log(echartDataArray.value[4].temp)
                 })
 
 
@@ -183,7 +184,7 @@ export default {
         })
 
         return {
-            lightStatus, pumpStatus, servoTime, mqttStatus, echartDataArray, autoStatus, lightControl, pumpControl, TimingFeed, autoControl
+            lightStatus, lightShowState, pumpStatus, servoTime, mqttStatus, echartDataArray, autoStatus, lightControl, pumpControl, TimingFeed, autoControl, lightState
         }
     }
 }
@@ -274,8 +275,9 @@ export default {
         height: 90vh;
         display: flex;
         flex-direction: column;
-        justify-content: center;
-        align-items: center;
+        margin-top: 45px;
+        /* justify-content: center;
+        align-items: center; */
 
         .equipment-status {
             width: 100%;
@@ -507,7 +509,6 @@ export default {
 
                     >div {
                         padding: 20px;
-                        margin-bottom: 20px;
                         justify-content: space-around;
                         font-size: 20px;
                         display: flex;
