@@ -13,12 +13,26 @@
                             <use xlink:href="#icon-bangzhu"></use>
                         </svg>
                         <div class="introduction">
-                            <ul>
-                                <li>水质</li>
-                                <li>水质数据内容</li>
-                                <li>水温</li>
-                                <li>水温数据内容</li>
-                            </ul>
+                            <div>
+                                <ul>
+                                    <li>
+                                        <h3>水质</h3>
+                                    </li>
+                                    <li><span>正常水质系数为25-40之间；若系数低于25但高于10，则说明有些浑浊，需换水；若系数低于10，则说明需要马上换水</span>
+                                    </li>
+                                </ul>
+                            </div>
+                            <div>
+                                <ul>
+                                    <li>
+                                        <h3>水温</h3>
+                                    </li>
+                                    <li><span>
+                                            金鱼等常见鱼类适宜水温为0℃-30℃，20℃-24℃最适合鱼类生活；若饲养的鱼类为热带鱼类，水温则需达到20℃-30℃
+                                        </span>
+                                    </li>
+                                </ul>
+                            </div>
                         </div>
                     </div>
 
@@ -275,13 +289,15 @@ export default {
 
                 .introduction {
                     font-weight: 300;
-                    font-size: 20px;
+                    font-size: 15px;
                     z-index: 99;
-                    background-color: white;
+                    background-color: rgb(249, 249, 249);
                     position: absolute;
                     top: 17%;
-                    left: 50%;
+                    left: 45%;
                     display: none;
+                    padding: 20px;
+                    width: 300px;
                 }
 
                 .helpIcon {
