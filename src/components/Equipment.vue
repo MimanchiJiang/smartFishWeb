@@ -7,7 +7,21 @@
                     <div :class="mqttStatus ? 'mqtt-status-greenCircle' : 'mqtt-status-redCircle'"></div>
                 </div>
                 <div class="equipment-echarts-topnav-title">
-                    智能鱼缸设备展示页面
+                    智能鱼缸设备数据展示页面
+                    <div class="helpIcon">
+                        <svg class="icon" aria-hidden="true">
+                            <use xlink:href="#icon-bangzhu"></use>
+                        </svg>
+                        <div class="introduction">
+                            <ul>
+                                <li>水质</li>
+                                <li>水质数据内容</li>
+                                <li>水温</li>
+                                <li>水温数据内容</li>
+                            </ul>
+                        </div>
+                    </div>
+
                 </div>
             </div>
             <div class="echarts-quality">
@@ -23,16 +37,23 @@
                     <span>设备控制模块</span>
                 </div>
                 <div class="equipment-control-content">
-                    <div class="equipment-control-content-light">
+                    <div class="equipment-control-content-auto">
                         <span>自动模式开关</span>
                         <div>
                             <el-switch v-model="autoStatus" @click="autoControl" />
                         </div>
                     </div>
                     <div class="equipment-control-content-light">
-                        <span>灯带开关</span>
+                        <div class="lightContent">
+                            <span>灯带开关</span>
+                            <div>
+                                <el-switch v-model="lightStatus" @click="lightControl" />
+                            </div>
+                        </div>
+
                         <div>
-                            <el-switch v-model="lightStatus" @click="lightControl" />
+                            <el-button class="lightShowModel" @click="lightState">灯带照明模式{{ lightShowModel }}</el-button>
+
                         </div>
                     </div>
                     <div class="equipment-control-content-pump">
@@ -48,7 +69,6 @@
                         </div>
                         <el-button type="success" round @click="TimingFeed">发送</el-button>
                     </div>
-                    <el-button @click="lightState">修改灯带模式</el-button>
                 </div>
             </div>
         </div>
@@ -68,9 +88,11 @@ export default {
         const mqttStatus = ref(false)
         const timer = ref("")
         const autoStatus = ref(true)
-        const lightShowState = ref(0)
+        const lightShowState = ref(1)
+        const lightShowModel = ref(1)
 
         let echartDataArray = ref([])
+
 
         const lightState = () => {
             axios({
@@ -81,12 +103,13 @@ export default {
             })
             console.log(lightStatus.value)
             if (lightShowState.value < 3) {
-                lightShowState.value++
+                lightShowState.value++;
+                lightShowModel.value++;
             } else {
                 lightShowState.value = 1
+                lightShowModel.value = 1
             }
-            console.log(lightShowState.value)
-            console.log(lightStatus.value)
+
 
         }
 
@@ -184,7 +207,7 @@ export default {
         })
 
         return {
-            lightStatus, lightShowState, pumpStatus, servoTime, mqttStatus, echartDataArray, autoStatus, lightControl, pumpControl, TimingFeed, autoControl, lightState
+            lightStatus, lightShowState, lightShowModel, pumpStatus, servoTime, mqttStatus, echartDataArray, autoStatus, lightControl, pumpControl, TimingFeed, autoControl, lightState
         }
     }
 }
@@ -247,6 +270,40 @@ export default {
                 font-size: 25px;
                 font-weight: bolder;
                 margin-right: 100px;
+
+
+
+                .introduction {
+                    font-weight: 300;
+                    font-size: 20px;
+                    z-index: 99;
+                    background-color: white;
+                    position: absolute;
+                    top: 17%;
+                    left: 50%;
+                    display: none;
+                }
+
+                .helpIcon {
+                    svg {
+                        width: 25px;
+                        height: 25px;
+                        margin-left: 5px;
+                    }
+
+                    &:hover .introduction {
+                        display: block;
+                    }
+
+
+                }
+
+
+
+
+
+
+
             }
         }
 
@@ -290,7 +347,7 @@ export default {
                 height: 10%;
                 text-align: center;
                 line-height: 52px;
-                font-size: 20px;
+                font-size: 25px;
                 font-weight: bolder;
             }
 
@@ -439,7 +496,7 @@ export default {
 
         .equipment-control {
             width: 100%;
-            height: 50%;
+            height: 80%;
             display: flex;
             flex-direction: column;
 
@@ -459,7 +516,7 @@ export default {
                 align-items: center;
                 flex-direction: column;
 
-                &-light {
+                &-auto {
                     width: 80%;
                     height: 15%;
                     margin-top: 5%;
@@ -470,11 +527,42 @@ export default {
                     align-items: center;
 
                     >span {
-                        width: 6rem;
+                        width: 10rem;
                         font-size: 20px;
                         margin-right: 20px;
                         text-align: center;
                     }
+                }
+
+                &-light {
+                    width: 80%;
+                    height: 30%;
+                    margin-top: 5%;
+                    background-color: #fff;
+                    border-radius: 30px;
+                    display: flex;
+                    justify-content: center;
+                    align-items: center;
+                    flex-direction: column;
+
+                    .lightContent {
+                        display: flex;
+                        flex-direction: row;
+
+                        >span {
+                            width: 10rem;
+                            font-size: 20px;
+                            margin-right: 20px;
+                            text-align: center;
+                        }
+                    }
+
+                    .lightShowModel {
+                        margin-top: 10px;
+                        font-size: 20px;
+                    }
+
+
                 }
 
                 &-pump {
@@ -488,7 +576,7 @@ export default {
                     align-items: center;
 
                     >span {
-                        width: 6rem;
+                        width: 10rem;
                         font-size: 20px;
                         margin-right: 20px;
                         text-align: center;
@@ -497,7 +585,7 @@ export default {
 
                 &-servo {
                     width: 80%;
-                    height: 15%;
+                    height: 30%;
                     margin: 5% 0;
                     background-color: #fff;
                     border-radius: 30px;
