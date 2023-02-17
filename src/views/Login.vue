@@ -72,14 +72,15 @@ export default {
                 register.value.notice = "密码长度为6~16个字符";
                 return;
             }
-            axios({
-                url: 'http://localhost:8888/register',
-                method: 'POST',
-                responseType: 'json',
-                data: JSON.stringify({ username: register.value.username, password: register.value.password })
-            }).then(() => {
-                console.log('发送成功')
-            })
+            // axios({
+            //     url: 'http://localhost:8888/register',
+            //     method: 'POST',
+            //     responseType: 'json',
+            //     data: JSON.stringify({ username: register.value.username, password: register.value.password })
+            // }).then(() => {
+            //     console.log('发送成功')
+            // })
+            router.push({ path: 'doc/equipment' })
 
         }
         const onLogin = () => {

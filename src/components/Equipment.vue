@@ -71,7 +71,7 @@
                         </div>
                     </div>
                     <div class="equipment-control-content-pump">
-                        <span>水泵开关</span>
+                        <span>换水开关</span>
                         <div>
                             <el-switch v-model="pumpStatus" @click="pumpControl" />
                         </div>
@@ -82,6 +82,12 @@
                             <el-input-number v-model="servoTime" :min="1" :max="10" @change="handleChange" />
                         </div>
                         <el-button type="success" round @click="TimingFeed">发送</el-button>
+                    </div>
+                    <div class="equipment-control-content-pump">
+                        <span>充氧开关</span>
+                        <div>
+                            <el-switch v-model="pumpStatus" @click="pumpControl" />
+                        </div>
                     </div>
                 </div>
             </div>

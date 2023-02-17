@@ -1,9 +1,15 @@
 <template>
     <div class="history">
         <div class="history-top">
-            <span>关键字:</span>
-            <el-input v-model="input" placeholder="Please input" clearable @clear="history" @keydown.enter="select" />
-            <el-button @click="select()">查询</el-button>
+            <el-radio-group v-model="radio" @change="select" size="large">
+                <el-radio size="large" border label="all">全部</el-radio>
+                <el-radio label="light" border>灯带</el-radio>
+                <el-radio label="pump" border>水泵</el-radio>
+                <el-radio label="feed" border>舵机</el-radio>
+                <el-radio label="quality" border>水质</el-radio>
+                <el-radio label="temp" border>温度</el-radio>
+
+            </el-radio-group>
         </div>
         <div class="history-data">
             <el-table :data="tableData.slice((currentPage - 1) * pageSize, currentPage * pageSize)" style="width: 100%">
@@ -25,10 +31,10 @@
 <script lang="ts" setup>
 import { ref, onMounted } from 'vue';
 import axios from 'axios'
-const input = ref('')
 const tableData = ref([])
 const currentPage = ref(1)
 const pageSize = ref(20)
+const radio = ref("")
 
 const timestampToTime = (timestamp) => {
     var date = new Date(timestamp);//时间戳为10位需*1000，时间戳为13位的话不需乘1000
@@ -43,14 +49,59 @@ const timestampToTime = (timestamp) => {
 
 
 const select = () => {
-    axios({
-        url: 'http://localhost:8888/select',
-        method: 'POST',
-        responseType: 'json',
-        data: JSON.stringify({ input: input.value })
-    }).then((res) => {
-        tableData.value = res.data
+    if (radio.value != 'all') {
+        axios({
+            url: 'http://localhost:8888/select',
+            method: 'POST',
+            responseType: 'json',
+            data: JSON.stringify({ input: radio.value })
+        }).then((res) => {
+            tableData.value = res.data
+            console.log(tableData.value)
+            pretreatment(res.data)
+        })
+    } else {
+        axios({
+            url: 'http://localhost:8888/history',
+            method: 'POST',
+        }).then((res) => {
+            tableData.value = res.data
+            pretreatment(res.data)
+        })
+    }
+
+    console.log(radio.value)
+}
+const pretreatment = (tableData) => {
+    tableData.forEach((e) => {
+        //@ts-ignore
+        e.time = timestampToTime(Date.parse(e.time))
+        //@ts-ignore
+        if (e.light && e.light == '0') {
+            //@ts-ignore
+            e.light = '关闭'
+        } else if (e.light && e.light == '1') {
+            //@ts-ignore
+            e.light = '开启'
+        }
+        //@ts-ignore
+        if (e.pump && e.pump == '0') {
+            //@ts-ignore
+            e.pump = '关闭'
+        } else if (e.pump && e.pump == '1') {
+            //@ts-ignore
+            e.pump = '开启'
+        }
+        //@ts-ignore
+        if (e.feed && e.feed == '0') {
+            //@ts-ignore
+            e.feed = '关闭'
+        } else if (e.feed && e.feed == '1') {
+            //@ts-ignore
+            e.feed = '开启'
+        }
     })
+    tableData.value = tableData
 }
 const history = () => {
     axios({
@@ -59,34 +110,7 @@ const history = () => {
     }).then((res) => {
         tableData.value = res.data
         console.log(tableData.value)
-        tableData.value.forEach((e) => {
-            //@ts-ignore
-            e.time = timestampToTime(Date.parse(e.time))
-            //@ts-ignore
-            if (e.light == '0') {
-                //@ts-ignore
-                e.light = '关闭'
-            } else {
-                //@ts-ignore
-                e.light = '开启'
-            }
-            //@ts-ignore
-            if (e.pump == '0') {
-                //@ts-ignore
-                e.pump = '关闭'
-            } else {
-                //@ts-ignore
-                e.pump = '开启'
-            }
-            //@ts-ignore
-            if (e.feed == '0') {
-                //@ts-ignore
-                e.feed = '关闭'
-            } else {
-                //@ts-ignore
-                e.feed = '开启'
-            }
-        })
+        pretreatment(res.data)
     })
 }
 
@@ -117,7 +141,7 @@ onMounted(() => {
         flex-direction: row;
         justify-content: center;
         align-items: center;
-        margin-top: 50px;
+        margin-top: 30px;
 
         >span {
             width: 130px;
