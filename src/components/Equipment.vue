@@ -64,14 +64,25 @@
                                 <el-switch v-model="lightStatus" @click="lightControl" />
                             </div>
                         </div>
-
-                        <div>
-                            <el-button class="lightShowModel" @click="lightState">灯带照明模式{{ lightShowModel }}</el-button>
-
-                        </div>
+                    </div>
+                    <div class="equipment-control-content-light">
+                        <el-button class="lightShowModel" @click="lightState">灯带照明模式{{ lightShowModel }}</el-button>
                     </div>
                     <div class="equipment-control-content-pump">
                         <span>换水开关</span>
+                        <div>
+                            <el-switch v-model="pumpStatus" @click="pumpControl" />
+                        </div>
+                    </div>
+
+                    <div class="equipment-control-content-pump">
+                        <span>充氧开关</span>
+                        <div>
+                            <el-switch v-model="airPumpStatus" @click="airPumpControl" />
+                        </div>
+                    </div>
+                    <div class="equipment-control-content-pump">
+                        <span>加热开关</span>
                         <div>
                             <el-switch v-model="pumpStatus" @click="pumpControl" />
                         </div>
@@ -82,12 +93,6 @@
                             <el-input-number v-model="servoTime" :min="1" :max="10" @change="handleChange" />
                         </div>
                         <el-button type="success" round @click="TimingFeed">发送</el-button>
-                    </div>
-                    <div class="equipment-control-content-pump">
-                        <span>充氧开关</span>
-                        <div>
-                            <el-switch v-model="pumpStatus" @click="pumpControl" />
-                        </div>
                     </div>
                 </div>
             </div>
@@ -104,14 +109,15 @@ export default {
     setup() {
         const lightStatus = ref(true)
         const pumpStatus = ref(true)
-        const servoTime = ref(1)
         const mqttStatus = ref(false)
-        const timer = ref("")
         const autoStatus = ref(true)
+        const airPumpStatus = ref(true)
+        const timer = ref("")
+        const servoTime = ref(1)
         const lightShowState = ref(1)
         const lightShowModel = ref(1)
-
         let echartDataArray = ref([])
+
 
 
         const lightState = () => {
@@ -119,7 +125,7 @@ export default {
                 url: 'http://localhost:8888/lightState',
                 method: 'POST',
                 responseType: 'json',
-                data: JSON.stringify({ light: lightStatus.value, lightShowState: lightShowState.value, pump: pumpStatus.value, temp: echartDataArray.value[4].temp, quality: echartDataArray.value[4].quality })
+                data: JSON.stringify(StatusObject.value)
             })
             console.log(lightStatus.value)
             if (lightShowState.value < 3) {
@@ -139,11 +145,21 @@ export default {
                 url: 'http://localhost:8888/light',
                 method: 'POST',
                 responseType: 'json',
-                data: JSON.stringify({ light: lightStatus.value, lightShowState: lightShowState.value, pump: pumpStatus.value, temp: echartDataArray.value[4].temp, quality: echartDataArray.value[4].quality })
+                data: JSON.stringify({ light: lightStatus.value, airPump: airPumpStatus.value, lightShowState: lightShowState.value, pump: pumpStatus.value, temp: echartDataArray.value[4].temp, quality: echartDataArray.value[4].quality })
             })
             console.log(lightStatus.value)
-
         }
+
+        const airPumpControl = () => {
+            axios({
+                url: 'http://localhost:8888/airPump',
+                method: 'POST',
+                responseType: 'json',
+                data: JSON.stringify({ light: lightStatus.value, airPump: airPumpStatus.value, lightShowState: lightShowState.value, pump: pumpStatus.value, temp: echartDataArray.value[4].temp, quality: echartDataArray.value[4].quality })
+            })
+            console.log(lightStatus.value)
+        }
+
         const autoControl = () => {
             axios({
                 url: 'http://localhost:8888/autoControl',
@@ -168,7 +184,7 @@ export default {
                 url: 'http://localhost:8888/pump',
                 method: 'POST',
                 responseType: 'json',
-                data: JSON.stringify({ light: lightStatus.value, lightShowState: lightShowState.value, pump: pumpStatus.value, temp: echartDataArray.value[4].temp, quality: echartDataArray.value[4].quality })
+                data: JSON.stringify({ light: lightStatus.value, airPump: airPumpStatus.value, lightShowState: lightShowState.value, pump: pumpStatus.value, temp: echartDataArray.value[4].temp, quality: echartDataArray.value[4].quality })
             })
         }
         onBeforeMount(() => {
@@ -227,7 +243,7 @@ export default {
         })
 
         return {
-            lightStatus, lightShowState, lightShowModel, pumpStatus, servoTime, mqttStatus, echartDataArray, autoStatus, lightControl, pumpControl, TimingFeed, autoControl, lightState
+            lightStatus, lightShowState, lightShowModel, pumpStatus, servoTime, mqttStatus, airPumpStatus, echartDataArray, autoStatus, lightControl, pumpControl, TimingFeed, autoControl, lightState, airPumpControl
         }
     }
 }
@@ -291,8 +307,6 @@ export default {
                 font-weight: bolder;
                 margin-right: 100px;
 
-
-
                 .introduction {
                     font-weight: 300;
                     font-size: 15px;
@@ -316,20 +330,9 @@ export default {
                     &:hover .introduction {
                         display: block;
                     }
-
-
                 }
-
-
-
-
-
-
-
             }
         }
-
-
 
         .echarts-temp {
             background-color: #fff;
@@ -351,7 +354,7 @@ export default {
 
     .equipment-sideBar {
         width: 30%;
-        height: 90vh;
+        height: 95vh;
         display: flex;
         flex-direction: column;
         margin-top: 45px;
@@ -558,7 +561,7 @@ export default {
 
                 &-light {
                     width: 80%;
-                    height: 30%;
+                    height: 15%;
                     margin-top: 5%;
                     background-color: #fff;
                     border-radius: 30px;
@@ -566,6 +569,10 @@ export default {
                     justify-content: center;
                     align-items: center;
                     flex-direction: column;
+
+                    .lightShowModel {
+                        font-size: 20px;
+                    }
 
                     .lightContent {
                         display: flex;
@@ -579,10 +586,7 @@ export default {
                         }
                     }
 
-                    .lightShowModel {
-                        margin-top: 10px;
-                        font-size: 20px;
-                    }
+
 
 
                 }
