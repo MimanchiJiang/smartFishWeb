@@ -5,6 +5,7 @@
                 <el-radio size="large" border label="all">全部</el-radio>
                 <el-radio label="light" border>灯带</el-radio>
                 <el-radio label="pump" border>水泵</el-radio>
+                <el-radio label="airPump" border>空气泵</el-radio>
                 <el-radio label="feed" border>舵机</el-radio>
                 <el-radio label="quality" border>水质</el-radio>
                 <el-radio label="temp" border>温度</el-radio>
@@ -16,6 +17,7 @@
                 <el-table-column prop="" label="" width="100" />
                 <el-table-column prop="light" label="灯带" align="center" width="200" />
                 <el-table-column prop="pump" label="水泵" align="center" width="200" />
+                <el-table-column prop="airPump" label="空气泵" align="center" width="200" />
                 <el-table-column prop="feed" label="舵机" align="center" width="200" />
                 <el-table-column prop="quality" label="水质" align="center" width="200" />
                 <el-table-column prop="temp" label="温度" align="center" width="200" />
@@ -99,6 +101,13 @@ const pretreatment = (tableData) => {
         } else if (e.feed && e.feed == '1') {
             //@ts-ignore
             e.feed = '开启'
+        }
+        if (e.airPump && e.airPump == '0') {
+            //@ts-ignore
+            e.airPump = '关闭'
+        } else if (e.airPump && e.airPump == '1') {
+            //@ts-ignore
+            e.airPump = '开启'
         }
     })
     tableData.value = tableData
