@@ -2,7 +2,7 @@
     <Topnav />
     <div class="topNavAndBanner">
         <div class="banner">
-            <h1>智能鱼缸</h1>
+            <h1>智能生态鱼缸</h1>
             <h2>我像只鱼儿在你的荷塘，只为和你守候那皎白月光</h2>
             <p class="actions" @click="toggle">
                 <a></a>

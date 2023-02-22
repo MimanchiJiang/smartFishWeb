@@ -10,8 +10,7 @@
                     <transition name="slide">
                         <div v-bind:class="{ show: isShowRegister }" class="register">
                             <input v-model="register.username" type="text" placeholder="用户名" />
-                            <input v-model="register.password" @keyup.enter="onRegister" type="password"
-                                placeholder="密码" />
+                            <input v-model="register.password" @keyup.enter="onRegister" type="password" placeholder="密码" />
                             <p v-bind:class="{ error: register.isError }">
                                 {{ register.notice }}
                             </p>
@@ -72,15 +71,21 @@ export default {
                 register.value.notice = "密码长度为6~16个字符";
                 return;
             }
-            // axios({
-            //     url: 'http://localhost:8888/register',
-            //     method: 'POST',
-            //     responseType: 'json',
-            //     data: JSON.stringify({ username: register.value.username, password: register.value.password })
-            // }).then(() => {
-            //     console.log('发送成功')
-            // })
-            router.push({ path: 'doc/equipment' })
+            axios({
+                url: 'http://localhost:8888/register',
+                method: 'POST',
+                responseType: 'json',
+                data: JSON.stringify({ username: register.value.username, password: register.value.password })
+            }).then((res) => {
+                console.log(res)
+                if (res.status == 200) {
+                    router.push({ path: 'doc/equipment' })
+                }
+                if (res.status == 201) {
+                    window.alert('用户名重复')
+                }
+            })
+
 
         }
         const onLogin = () => {
@@ -94,7 +99,19 @@ export default {
                 login.value.notice = "密码长度为6~16个字符";
                 return;
             }
-            router.push({ path: 'doc/equipment' })
+            axios({
+                url: 'http://localhost:8888/login',
+                method: 'POST',
+                responseType: 'json',
+                data: JSON.stringify({ username: login.value.username, password: login.value.password })
+            }).then((res) => {
+                if (res.status == 200) {
+                    router.push({ path: 'doc/equipment' })
+                }
+                if (res.status == 202) {
+                    window.alert("用户名或密码错误")
+                }
+            })
 
         }
         const close = () => {
