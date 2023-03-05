@@ -69,9 +69,15 @@
                         <el-button class="lightShowModel" @click="lightState">灯带照明模式{{ lightShowModel }}</el-button>
                     </div>
                     <div class="equipment-control-content-pump">
-                        <span>换水开关</span>
+                        <span>加水开关</span>
                         <div>
-                            <el-switch v-model="pumpStatus" @click="pumpControl" />
+                            <el-switch v-model="pumpInStatus" @click="pumpInControl" />
+                        </div>
+                    </div>
+                    <div class="equipment-control-content-pump">
+                        <span>抽水开关</span>
+                        <div>
+                            <el-switch v-model="pumpOutStatus" @click="pumpOutControl" />
                         </div>
                     </div>
 
@@ -84,15 +90,19 @@
                     <div class="equipment-control-content-pump">
                         <span>加热开关</span>
                         <div>
-                            <el-switch v-model="pumpStatus" @click="pumpControl" />
+                            <el-switch v-model="heatStatus" @click="heatControl" />
                         </div>
                     </div>
                     <div class="equipment-control-content-servo">
                         <div>
-                            <span>定时喂食（h）</span>
+                            <span>定时喂食(h)</span>
                             <el-input-number v-model="servoTime" :min="1" :max="10" @change="handleChange" />
                         </div>
-                        <el-button type="success" round @click="TimingFeed">发送</el-button>
+                        <div>
+                            <el-button type="success" round @click="feedNow">立即喂食</el-button>
+                            <el-button type="success" round @click="TimingFeed">定时喂食</el-button>
+                        </div>
+
                     </div>
                 </div>
             </div>
@@ -104,19 +114,24 @@ import QualityEcharts from './QualityEcharts.vue';
 import TempEcharts from './TempEcharts.vue';
 import { ref, onMounted, onBeforeUnmount, onBeforeMount, toRefs } from 'vue'
 import axios from 'axios'
+import { useRoute } from 'vue-router'
 export default {
     components: { QualityEcharts, TempEcharts },
     setup() {
         const lightStatus = ref(true)
-        const pumpStatus = ref(true)
+        const pumpInStatus = ref(true)
+        const pumpOutStatus = ref(true)
         const mqttStatus = ref(false)
         const autoStatus = ref(true)
-        const airPumpStatus = ref(true)
+        const feedStatus = ref(true)
+        const heatStatus = ref(false)
+        const airPumpStatus = ref(false)
         const timer = ref("")
         const servoTime = ref(1)
         const lightShowState = ref(1)
         const lightShowModel = ref(1)
         let echartDataArray = ref([])
+        const username = useRoute().query.username
 
 
 
@@ -138,6 +153,15 @@ export default {
 
 
         }
+        const heatControl = () => {
+            axios({
+                url: 'http://localhost:8888/heat',
+                method: 'POST',
+                responseType: 'json',
+                data: JSON.stringify({ light: lightStatus.value, heat: heatStatus.value, username, airPump: airPumpStatus.value, lightShowState: lightShowState.value, pumpin: pumpInStatus.value, pumpout: pumpOutStatus.value, temp: echartDataArray.value[4].temp, quality: echartDataArray.value[4].quality })
+            })
+            console.log(lightStatus.value)
+        }
 
 
         const lightControl = () => {
@@ -145,7 +169,7 @@ export default {
                 url: 'http://localhost:8888/light',
                 method: 'POST',
                 responseType: 'json',
-                data: JSON.stringify({ light: lightStatus.value, airPump: airPumpStatus.value, lightShowState: lightShowState.value, pump: pumpStatus.value, temp: echartDataArray.value[4].temp, quality: echartDataArray.value[4].quality })
+                data: JSON.stringify({ light: lightStatus.value, heat: heatStatus.value, username, airPump: airPumpStatus.value, lightShowState: lightShowState.value, pumpin: pumpInStatus.value, pumpout: pumpOutStatus.value, temp: echartDataArray.value[4].temp, quality: echartDataArray.value[4].quality })
             })
             console.log(lightStatus.value)
         }
@@ -155,7 +179,7 @@ export default {
                 url: 'http://localhost:8888/airPump',
                 method: 'POST',
                 responseType: 'json',
-                data: JSON.stringify({ light: lightStatus.value, airPump: airPumpStatus.value, lightShowState: lightShowState.value, pump: pumpStatus.value, temp: echartDataArray.value[4].temp, quality: echartDataArray.value[4].quality })
+                data: JSON.stringify({ light: lightStatus.value, heat: heatStatus.value, username, airPump: airPumpStatus.value, lightShowState: lightShowState.value, pumpin: pumpInStatus.value, pumpout: pumpOutStatus.value, temp: echartDataArray.value[4].temp, quality: echartDataArray.value[4].quality })
             })
             console.log(lightStatus.value)
         }
@@ -178,13 +202,30 @@ export default {
                 window.alert(`定时成功，将在${servoTime.value}小时后进行喂食`)
             })
         }
-
-        const pumpControl = () => {
+        const feedNow = () => {
             axios({
-                url: 'http://localhost:8888/pump',
+                url: 'http://localhost:8888/Feed',
+                method: 'POST',
+                data: JSON.stringify({ feedState: feedStatus.value })
+            }).then((res) => {
+                console.log(res)
+            })
+        }
+
+        const pumpInControl = () => {
+            axios({
+                url: 'http://localhost:8888/pumpin',
                 method: 'POST',
                 responseType: 'json',
-                data: JSON.stringify({ light: lightStatus.value, airPump: airPumpStatus.value, lightShowState: lightShowState.value, pump: pumpStatus.value, temp: echartDataArray.value[4].temp, quality: echartDataArray.value[4].quality })
+                data: JSON.stringify({ light: lightStatus.value, heat: heatStatus.value, username, airPump: airPumpStatus.value, lightShowState: lightShowState.value, pumpin: pumpInStatus.value, pumpout: pumpOutStatus.value, temp: echartDataArray.value[4].temp, quality: echartDataArray.value[4].quality })
+            })
+        }
+        const pumpOutControl = () => {
+            axios({
+                url: 'http://localhost:8888/pumpout',
+                method: 'POST',
+                responseType: 'json',
+                data: JSON.stringify({ light: lightStatus.value, heat: heatStatus.value, username, airPump: airPumpStatus.value, lightShowState: lightShowState.value, pumpin: pumpInStatus.value, pumpout: pumpOutStatus.value, temp: echartDataArray.value[4].temp, quality: echartDataArray.value[4].quality })
             })
         }
         onBeforeMount(() => {
@@ -216,6 +257,7 @@ export default {
                     url: 'http://localhost:8888/data',
                     method: 'POST'
                 }).then((res) => {
+                    console.log(res)
                     if (res.data[0].light == '0') {
                         lightStatus.value = false
                     }
@@ -223,10 +265,16 @@ export default {
                         lightStatus.value = true
                     }
                     if (res.data[0].pump == '0') {
-                        pumpStatus.value = false
+                        pumpInStatus.value = false
                     }
                     if (res.data[0].pump == '1') {
-                        pumpStatus.value = true
+                        pumpInStatus.value = true
+                    }
+                    if (res.data[0].pumpout == '0') {
+                        pumpOutStatus.value = false
+                    }
+                    if (res.data[0].pumpout == '1') {
+                        pumpOutStatus.value = true
                     }
                     if (res.data[0].autoControl == '0') {
                         autoStatus.value = false
@@ -234,6 +282,19 @@ export default {
                     if (res.data[0].autoControl == '1') {
                         autoStatus.value = true
                     }
+                    if (res.data[0].airPump == '0') {
+                        airPumpStatus.value = false
+                    }
+                    if (res.data[0].airPump == '1') {
+                        airPumpStatus.value = true
+                    }
+                    if (res.data[0].heat == '0') {
+                        heatStatus.value = false
+                    }
+                    if (res.data[0].heat == '1') {
+                        heatStatus.value = true
+                    }
+
                 })
             }, 1000)
         })
@@ -243,7 +304,7 @@ export default {
         })
 
         return {
-            lightStatus, lightShowState, lightShowModel, pumpStatus, servoTime, mqttStatus, airPumpStatus, echartDataArray, autoStatus, lightControl, pumpControl, TimingFeed, autoControl, lightState, airPumpControl
+            lightStatus, lightShowState, lightShowModel, feedStatus, pumpInStatus, pumpOutStatus, servoTime, mqttStatus, airPumpStatus, echartDataArray, autoStatus, heatStatus, lightControl, feedNow, pumpInControl, pumpOutControl, TimingFeed, autoControl, lightState, airPumpControl, heatControl
         }
     }
 }
@@ -363,7 +424,7 @@ export default {
 
         .equipment-status {
             width: 100%;
-            height: 50%;
+            height: 70%;
             display: flex;
             flex-direction: column;
 
@@ -521,7 +582,7 @@ export default {
 
         .equipment-control {
             width: 100%;
-            height: 80%;
+            height: 85%;
             display: flex;
             flex-direction: column;
 

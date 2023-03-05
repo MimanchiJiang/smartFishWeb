@@ -98,7 +98,6 @@ export default {
                 console.log(props.echartDataArray)
                 clearInterval(timer.value)
             })
-
         }
     }
 }

@@ -28,7 +28,6 @@
 <script lang="ts">
 import Topnav from '../components/topnav.vue'
 import { inject, Ref, onMounted, ref } from 'vue';
-import axios from 'axios'
 
 export default {
     components: { Topnav },

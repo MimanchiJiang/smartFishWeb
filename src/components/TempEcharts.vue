@@ -18,6 +18,7 @@ export default {
 
         onMounted(() => {
             tempEcharts()
+            console.log(props.echartDataArray)
         })
         const timestampToTime = (timestamp) => {
             var date = new Date(timestamp);//时间戳为10位需*1000，时间戳为13位的话不需乘1000

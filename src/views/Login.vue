@@ -79,7 +79,11 @@ export default {
             }).then((res) => {
                 console.log(res)
                 if (res.status == 200) {
-                    router.push({ path: 'doc/equipment' })
+                    router.push({
+                        path: 'doc/equipment', query: {
+                            username: register.value.username
+                        }
+                    })
                 }
                 if (res.status == 201) {
                     window.alert('用户名重复')
@@ -106,7 +110,11 @@ export default {
                 data: JSON.stringify({ username: login.value.username, password: login.value.password })
             }).then((res) => {
                 if (res.status == 200) {
-                    router.push({ path: 'doc/equipment' })
+                    router.push({
+                        path: 'doc/equipment', query: {
+                            username: login.value.username
+                        }
+                    })
                 }
                 if (res.status == 202) {
                     window.alert("用户名或密码错误")

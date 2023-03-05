@@ -9,18 +9,21 @@
                 <el-radio label="feed" border>舵机</el-radio>
                 <el-radio label="quality" border>水质</el-radio>
                 <el-radio label="temp" border>温度</el-radio>
+                <el-radio label="heat" border>加热</el-radio>
+
 
             </el-radio-group>
         </div>
         <div class="history-data">
-            <el-table :data="tableData.slice((currentPage - 1) * pageSize, currentPage * pageSize)" style="width: 100%">
-                <el-table-column prop="" label="" width="100" />
+            <el-table stripe :data="tableData.slice((currentPage - 1) * pageSize, currentPage * pageSize)"
+                style="width: 100%">
                 <el-table-column prop="light" label="灯带" align="center" width="200" />
                 <el-table-column prop="pump" label="水泵" align="center" width="200" />
                 <el-table-column prop="airPump" label="空气泵" align="center" width="200" />
                 <el-table-column prop="feed" label="舵机" align="center" width="200" />
                 <el-table-column prop="quality" label="水质" align="center" width="200" />
                 <el-table-column prop="temp" label="温度" align="center" width="200" />
+                <el-table-column prop="heat" label="加热" align="center" width="200" />
                 <el-table-column prop="time" label="时间" align="center" width="200" sortable />
             </el-table>
             <el-pagination layout=" prev, pager, next, jumper" :total="tableData.length" @size-change="handleSizeChange"
@@ -108,6 +111,13 @@ const pretreatment = (tableData) => {
         } else if (e.airPump && e.airPump == '1') {
             //@ts-ignore
             e.airPump = '开启'
+        }
+        if (e.heat && e.heat == '0') {
+            //@ts-ignore
+            e.heat = '关闭'
+        } else if (e.heat && e.heat == '1') {
+            //@ts-ignore
+            e.heat = '开启'
         }
     })
     tableData.value = tableData
