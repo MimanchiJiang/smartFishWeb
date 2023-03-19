@@ -9,7 +9,9 @@
                     </h2>
                     <ol>
                         <li>
-                            <router-link to=/doc/equipment>设备展示
+                            <!-- <router-link to=/doc/equipment>设备展示
+                            </router-link> -->
+                            <router-link :to="{ name: 'shebei' }">设备展示
                             </router-link>
                         </li>
                         <li>

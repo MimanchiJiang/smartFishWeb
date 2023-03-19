@@ -79,6 +79,7 @@ export default {
             }).then((res) => {
                 console.log(res)
                 if (res.status == 200) {
+                    localStorage.setItem('username', register.value.username);
                     router.push({
                         path: 'doc/equipment', query: {
                             username: register.value.username
@@ -110,6 +111,7 @@ export default {
                 data: JSON.stringify({ username: login.value.username, password: login.value.password })
             }).then((res) => {
                 if (res.status == 200) {
+                    localStorage.setItem('username', login.value.username);
                     router.push({
                         path: 'doc/equipment', query: {
                             username: login.value.username
