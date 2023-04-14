@@ -136,11 +136,12 @@ export default {
 
 
         const lightState = () => {
+            console.log("111")
             axios({
                 url: 'http://localhost:8888/lightState',
                 method: 'POST',
                 responseType: 'json',
-                data: JSON.stringify(StatusObject.value)
+                data: JSON.stringify({ lightShowState: lightShowState.value })
             })
             console.log(lightStatus.value)
             if (lightShowState.value < 3) {

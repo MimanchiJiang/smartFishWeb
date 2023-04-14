@@ -4,9 +4,7 @@
         <div class="content">
             <div class="asideContent">
                 <aside v-if="asideVisible">
-                    <h2>
-                        文档
-                    </h2>
+
                     <ol>
                         <li>
                             <!-- <router-link to=/doc/equipment>设备展示
